@@ -37,9 +37,13 @@ export class Observer {
   vmCount: number; // number of vms that has this object as root $data
 
   constructor (value: any) {
-    this.value = value
+    this.value = value //value就是data本身
+
+
+    //dep是啥？额。。。
     this.dep = new Dep()
     this.vmCount = 0
+    //
     def(value, '__ob__', this)
     if (Array.isArray(value)) {
       const augment = hasProto
@@ -48,6 +52,7 @@ export class Observer {
       augment(value, arrayMethods, arrayKeys)
       this.observeArray(value)
     } else {
+      //只有对象才走这一步
       this.walk(value)
     }
   }
@@ -57,9 +62,12 @@ export class Observer {
    * getter/setters. This method should only be called when
    * value type is Object.
    */
+  //walk就是遍历data的所有属性
   walk (obj: Object) {
     const keys = Object.keys(obj)
     for (let i = 0; i < keys.length; i++) {
+      //将data的每一个属性都执行defineReactive这个函数
+      //使用Object.defineProperty来绑定监听
       defineReactive(obj, keys[i], obj[keys[i]])
     }
   }
@@ -128,12 +136,21 @@ export function observe (value: any, asRootData: ?boolean): Observer | void {
 /**
  * Define a reactive property on an Object.
  */
+// defineReactive(obj, keys[i], obj[keys[i]])
+
 export function defineReactive (
   obj: Object,
   key: string,
   val: any,
   customSetter?: Function
 ) {
+  //又来了在get()中执行dep.depend()，在set()中执行dep.notify()
+  //观察者模式
+  //dep.depend()是绑定依赖，dep.notify()是触发通知
+  //这也说明只有被get()过的属性才会绑定依赖，未被get()就忽略不管
+
+
+
   const dep = new Dep()
 
   const property = Object.getOwnPropertyDescriptor(obj, key)
@@ -146,12 +163,14 @@ export function defineReactive (
   const setter = property && property.set
 
   let childOb = observe(val)
+  //core，使用defineProperty来绑定数据
   Object.defineProperty(obj, key, {
     enumerable: true,
     configurable: true,
     get: function reactiveGetter () {
       const value = getter ? getter.call(obj) : val
       if (Dep.target) {
+        //这是啥？
         dep.depend()
         if (childOb) {
           childOb.dep.depend()
