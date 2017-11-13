@@ -18,13 +18,28 @@ const genStaticKeysCached = cached(genStaticKeys)
  *    create fresh nodes for them on each re-render;
  * 2. Completely skip them in the patching process.
  */
+/**
+*为了检测子节点是否是静态节点，如果一些节点从来不需要改变，就是静态的子节点
+*一旦我们发现有这种子节点，我们就可以
+*1.把他们提到一个常量里去，我们就不需要在每次render的时候建立新的子节点
+*2.在patch的过程中跳过他们
+*/
+//我有一个问题： 这里的option使用啦做啥的
 export function optimize (root: ?ASTElement, options: CompilerOptions) {
   if (!root) return
+  //问题就是：这里打印出来看到的options并没有staticKeys这个属性
+
   isStaticKey = genStaticKeysCached(options.staticKeys || '')
   isPlatformReservedTag = options.isReservedTag || no
+
   // first pass: mark all non-static nodes.
+  //记录所有不是静态的
+
   markStatic(root)
+
   // second pass: mark static roots.
+  //记录静态的
+
   markStaticRoots(root, false)
 }
 
@@ -34,7 +49,7 @@ function genStaticKeys (keys: string): Function {
     (keys ? ',' + keys : '')
   )
 }
-
+//传过来的参数就是AST
 function markStatic (node: ASTNode) {
   node.static = isStatic(node)
   if (node.type === 1) {
@@ -91,7 +106,7 @@ function walkThroughConditionsBlocks (conditionBlocks: ASTIfConditions, isInFor:
     markStaticRoots(conditionBlocks[i].block, isInFor)
   }
 }
-
+//其实是在遍历每一层的AST，递归下去
 function isStatic (node: ASTNode): boolean {
   if (node.type === 2) { // expression
     return false
@@ -121,3 +136,12 @@ function isDirectChildOfTemplateFor (node: ASTElement): boolean {
   }
   return false
 }
+
+/**
+ *
+ *
+ *
+ *
+ *
+ *
+ */

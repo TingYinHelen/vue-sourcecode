@@ -161,8 +161,9 @@ export function defineReactive (
   // cater for pre-defined getter/setters
   const getter = property && property.get
   const setter = property && property.set
-
+  //进行递归绑定
   let childOb = observe(val)
+
   //core，使用defineProperty来绑定数据
   Object.defineProperty(obj, key, {
     enumerable: true,
@@ -171,7 +172,9 @@ export function defineReactive (
       const value = getter ? getter.call(obj) : val
       if (Dep.target) {
         //这是啥？
+
         dep.depend()
+
         if (childOb) {
           childOb.dep.depend()
         }
