@@ -31,7 +31,7 @@ export function makeMap (
   const map = Object.create(null)
   const list: Array<string> = str.split(',')
 
-  //哎呀有两个为啥不直接赋值呢
+  //哦，这里不只是component和slot
   for (let i = 0; i < list.length; i++) {
     map[list[i]] = true
   }
@@ -81,10 +81,78 @@ export function hasOwn (obj: Object, key: string): boolean {
 export function isPrimitive (value: any): boolean {
   return typeof value === 'string' || typeof value === 'number'
 }
+/**
+ * makeMap的用法是：将出入进去的值写入map中
+ * const fun = makeMap('haha,hehe,heihei') => 这里 makeMap将返回一个函数
+ * 调用fun(key)就可以检查key是否在makeMap生成的对象中
+ * genStaticKeys(keys: string)这个函数先执行一次makeMap
+ * 并且return makeMap,  这里genStaticKeys传入了一个keys，也就是和
+ * makeMap()中本来的参数拼在一起,返回的就是本来makeMap的那个函数，只是
+ * map的那个对象多了genStaticKeys传入的那个key
+ * 现在已经比较明了了
+ * 现在把genStaticKeys传入了cached函数，来看cached
+ * cached反悔了一个函数cachedFn，接受一个字符串
+ * cached用来做缓存，
+ *
+ *
+ * function cached(fn){
+ *   const cache = Object.create(null)
+ *
+ *   return (function cachedFn(str){
+ *      const hit = cache[str]
+ *      return hit || cache[str] = fn(str)
+ *   })
+ * }
+ * const genStaticKeysCached = cached(genStaticKeys)
+ *
+ *
+ *
+ *
+ */
 
 /**
  * Create a cached version of a pure function.
  */
+/**genStaticKeys()这个函数传入的值就是key: string,看key是否在
+ * 'type,tag,attrsList,attrsMap,plain,parent,children,attrs'这里面
+ *  function genStaticKeys (keys: string): Function {
+      return makeMap(
+        'type,tag,attrsList,attrsMap,plain,parent,children,attrs' +
+        (keys ? ',' + keys : '')
+      )
+    }
+ *
+ *
+ * const genStaticKeysCached = cached(genStaticKeys)
+ *
+ * function cached(fn){
+ *   const cache = Object.create(null)
+ *   return (function cachedFn(str){
+ *      const hit = cache[str]
+ *      return hit || cache[str] = fn(str)
+ *   })
+ * }
+ *
+ * export function makeMap (
+  str: string,
+  expectsLowerCase?: boolean
+): (key: string) => true | void {
+  const map = Object.create(null)
+  const list: Array<string> = str.split(',')
+  for (let i = 0; i < list.length; i++) {
+    map[list[i]] = true
+  }
+  //return expectsLowerCase ? val => map[val.toLowerCase()] : val => map[val]
+//}
+ *
+ *
+ *
+ *
+ *
+ *
+ */
+
+
 export function cached<F: Function> (fn: F): F {
   const cache = Object.create(null)
   return (function cachedFn (str: string) {

@@ -5,6 +5,10 @@ import { makeMap, isBuiltInTag, cached, no } from 'shared/util'
 let isStaticKey
 let isPlatformReservedTag
 
+
+
+//genStaticKeys返回的就是就是makeMap，即传一个key进去，返回的是true就是
+//额。。懵逼了，不懂了
 const genStaticKeysCached = cached(genStaticKeys)
 
 /**
@@ -28,8 +32,9 @@ const genStaticKeysCached = cached(genStaticKeys)
 export function optimize (root: ?ASTElement, options: CompilerOptions) {
   if (!root) return
   //问题就是：这里打印出来看到的options并没有staticKeys这个属性
-
+  //
   isStaticKey = genStaticKeysCached(options.staticKeys || '')
+
   isPlatformReservedTag = options.isReservedTag || no
 
   // first pass: mark all non-static nodes.
@@ -119,12 +124,21 @@ function isStatic (node: ASTNode): boolean {
     return true
   }
   //如果是标签就判断以下
+  //这里所做的就是把前面的全部都判断，判断正确后，然后把node的所有key都存在cache中
+  //也就是说把静态node存入到cache中去
   return !!(node.pre || (
     !node.hasBindings && // no dynamic bindings
     !node.if && !node.for && // not v-if or v-for or v-else
     !isBuiltInTag(node.tag) && // not a built-in //如果返回的是slot或者component就返回true
     isPlatformReservedTag(node.tag) && // not a component
-    !isDirectChildOfTemplateFor(node) &&
+    !isDirectChildOfTemplateFor(node) && //判断是否是<template>的子元素
+    /**
+     *isStaticKey是一个返回true和false的函数
+     *node中的每一个key都是静态的key并且把key传进every中
+     *问题是,什么是静态的key呢？
+     *我猜就是key === ...
+     * [1,2,3].every(val=>val>0)
+     */
     Object.keys(node).every(isStaticKey)
   ))
 }
