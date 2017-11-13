@@ -108,16 +108,21 @@ function walkThroughConditionsBlocks (conditionBlocks: ASTIfConditions, isInFor:
 }
 //其实是在遍历每一层的AST，递归下去
 function isStatic (node: ASTNode): boolean {
+  //如果是表达式直接返回不是静态节点
+
   if (node.type === 2) { // expression
     return false
   }
+  //如果是文本直接返回是静态节点
+
   if (node.type === 3) { // text
     return true
   }
+  //如果是标签就判断以下
   return !!(node.pre || (
     !node.hasBindings && // no dynamic bindings
     !node.if && !node.for && // not v-if or v-for or v-else
-    !isBuiltInTag(node.tag) && // not a built-in
+    !isBuiltInTag(node.tag) && // not a built-in //如果返回的是slot或者component就返回true
     isPlatformReservedTag(node.tag) && // not a component
     !isDirectChildOfTemplateFor(node) &&
     Object.keys(node).every(isStaticKey)

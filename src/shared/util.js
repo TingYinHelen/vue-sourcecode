@@ -30,12 +30,24 @@ export function makeMap (
 ): (key: string) => true | void {
   const map = Object.create(null)
   const list: Array<string> = str.split(',')
+
+  //哎呀有两个为啥不直接赋值呢
   for (let i = 0; i < list.length; i++) {
     map[list[i]] = true
   }
-  return expectsLowerCase
-    ? val => map[val.toLowerCase()]
-    : val => map[val]
+  ///返回的是一个function
+  /**
+   *
+   *val => map[val] <=>
+   function(val){
+     //请看这里，这里的map就是用了外层函数的变量
+    return map[val]
+   }
+   *传进来的是tag是component或者是slot就返回true
+   *return一个function，这个function中的作用域可以使用这个函数中的变量
+   *
+   */
+  return expectsLowerCase ? val => map[val.toLowerCase()] : val => map[val]
 }
 
 /**

@@ -33,5 +33,12 @@ export function compile (
  *type: 3(静态的文本节点)
  *如果AST中一个node有指令则会有相应的字段作为标注
  *
+ *AST中的tag
+ *一般的标签节点是什么tag就是什么
+ *文本节点没有tag
+ *组件的tag就是组件名
+ *slot的tag就是slot
+ *
+ *
  *
  */
