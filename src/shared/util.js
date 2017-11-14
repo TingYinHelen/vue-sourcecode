@@ -35,7 +35,6 @@ export function makeMap (
   for (let i = 0; i < list.length; i++) {
     map[list[i]] = true
   }
-  ///返回的是一个function
   /**
    *
    *val => map[val] <=>
@@ -43,6 +42,7 @@ export function makeMap (
      //请看这里，这里的map就是用了外层函数的变量
     return map[val]
    }
+   返回的是一个函数，传入一个key返回true or false
    *传进来的是tag是component或者是slot就返回true
    *return一个function，这个function中的作用域可以使用这个函数中的变量
    *
@@ -95,18 +95,20 @@ export function isPrimitive (value: any): boolean {
  * cached用来做缓存，
  *
  *
+ * cached其实就是传入一个函数，然后返回一个函数，然后向返回函数中传入string，有之前
+ * cached的fn参数，来执行string
  * function cached(fn){
  *   const cache = Object.create(null)
  *
  *   return (function cachedFn(str){
  *      const hit = cache[str]
- *      return hit || cache[str] = fn(str)
+ *      等同于 cache[str] = fn(str), 然后返回fn(str)
+ *      return hit || (cache[str] = fn(str))
  *   })
  * }
+ * 这里就是将genStaticKeys全部存入cache中
  * const genStaticKeysCached = cached(genStaticKeys)
- *
- *
- *
+ *  genStaticKeysCached则是一个函数
  *
  */
 
@@ -125,13 +127,6 @@ export function isPrimitive (value: any): boolean {
  *
  * const genStaticKeysCached = cached(genStaticKeys)
  *
- * function cached(fn){
- *   const cache = Object.create(null)
- *   return (function cachedFn(str){
- *      const hit = cache[str]
- *      return hit || cache[str] = fn(str)
- *   })
- * }
  *
  * export function makeMap (
   str: string,

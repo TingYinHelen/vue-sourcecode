@@ -7,8 +7,13 @@ let isPlatformReservedTag
 
 
 
-//genStaticKeys返回的就是就是makeMap，即传一个key进去，返回的是true就是
-//额。。懵逼了，不懂了
+//cached返回一个函数，这个函数是任意执行字符串操作的函数，
+/**
+ * 然后传入一个字符串，去执行这个函数
+ *
+ *
+ */
+
 const genStaticKeysCached = cached(genStaticKeys)
 
 /**
@@ -32,18 +37,19 @@ const genStaticKeysCached = cached(genStaticKeys)
 export function optimize (root: ?ASTElement, options: CompilerOptions) {
   if (!root) return
   //问题就是：这里打印出来看到的options并没有staticKeys这个属性
-  //
+  //测试options.staticKeys中的没有属性是否为true，即就是静态的
+
   isStaticKey = genStaticKeysCached(options.staticKeys || '')
 
   isPlatformReservedTag = options.isReservedTag || no
 
   // first pass: mark all non-static nodes.
   //记录所有不是静态的
-
+  //给所有静态节点加上static属性
   markStatic(root)
 
   // second pass: mark static roots.
-  //记录静态的
+  //记录静态的roots
 
   markStaticRoots(root, false)
 }
@@ -54,7 +60,7 @@ function genStaticKeys (keys: string): Function {
     (keys ? ',' + keys : '')
   )
 }
-//传过来的参数就是AST
+//传过来的参数就是AST,将判断是否是静态节点，如果是则它的static就是true否则就是false
 function markStatic (node: ASTNode) {
   node.static = isStatic(node)
   if (node.type === 1) {
@@ -77,7 +83,7 @@ function markStatic (node: ASTNode) {
     }
   }
 }
-
+//在静态节点的基础上判断静态根节点
 function markStaticRoots (node: ASTNode, isInFor: boolean) {
   if (node.type === 1) {
     if (node.static || node.once) {
@@ -86,6 +92,8 @@ function markStaticRoots (node: ASTNode, isInFor: boolean) {
     // For a node to qualify as a static root, it should have children that
     // are not just static text. Otherwise the cost of hoisting out will
     // outweigh the benefits and it's better off to just always render it fresh.
+
+
     if (node.static && node.children.length && !(
       node.children.length === 1 &&
       node.children[0].type === 3
@@ -132,13 +140,7 @@ function isStatic (node: ASTNode): boolean {
     !isBuiltInTag(node.tag) && // not a built-in //如果返回的是slot或者component就返回true
     isPlatformReservedTag(node.tag) && // not a component
     !isDirectChildOfTemplateFor(node) && //判断是否是<template>的子元素
-    /**
-     *isStaticKey是一个返回true和false的函数
-     *node中的每一个key都是静态的key并且把key传进every中
-     *问题是,什么是静态的key呢？
-     *我猜就是key === ...
-     * [1,2,3].every(val=>val>0)
-     */
+
     Object.keys(node).every(isStaticKey)
   ))
 }
