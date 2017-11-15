@@ -27,6 +27,7 @@ export function generate (
   staticRenderFns: Array<string>
 } {
   // save previous staticRenderFns so generate calls can be nested
+
   const prevStaticRenderFns: Array<string> = staticRenderFns
   const currentStaticRenderFns: Array<string> = staticRenderFns = []
   const prevOnceCount = onceCount
@@ -45,6 +46,18 @@ export function generate (
     staticRenderFns: currentStaticRenderFns
   }
 }
+/**
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ */
 
 function genElement (el: ASTElement): string {
   if (el.staticRoot && !el.staticProcessed) {

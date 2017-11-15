@@ -15,11 +15,29 @@ export function compile (
   //这里是将非结构化的字符串处理成结构化的JSON数据
   //这个JSON里有，attr,children, parent, plain, static, staticRoot, tag, type
   const ast = parse(template.trim(), options)
-  //优化AST,这一步区分AST中哪些是动态的，哪些是静态的。
-  //其实就是判断该节点以及其子节点有没有关联指令就可以判断
-
+  //优化AST
+  //所谓的优化就是将静态节点加一个属性static,true就是静态节点，false就不是
+  //静态根节点添加属性staticRoot， 同上
   optimize(ast, options)
+
+
+
+
   const code = generate(ast, options)
+  /**
+   * code返回的是一个
+   * {
+        render: '',  //render是一个函数，是什么函数呢等我看完了回来再说
+        staticRenderFns: ''
+     }
+     动态节点才在render函数中体现，静态节点在staticRenderFns中体现
+   *  静态节点只会在初次显示view的时候被执行，后面的model变化将不会再改变
+   *
+   *
+   *
+   */
+
+
   return {
     ast,
     render: code.render,
