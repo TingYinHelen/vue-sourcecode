@@ -7,6 +7,7 @@ import { generate } from './codegen/index'
 /**
  * Compile a template.
  */
+//将字符串模板转成render函数
 export function compile (
   template: string,
   options: CompilerOptions

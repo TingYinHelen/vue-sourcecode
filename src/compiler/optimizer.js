@@ -49,7 +49,8 @@ export function optimize (root: ?ASTElement, options: CompilerOptions) {
   markStatic(root)
 
   // second pass: mark static roots.
-  //记录静态的roots
+  //记录静态的根节点，所谓静态根节点就是这个标签下，所有的标签都是静态节点
+  // 并且是被挂载的标签
 
   markStaticRoots(root, false)
 }

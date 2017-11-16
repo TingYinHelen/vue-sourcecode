@@ -15,9 +15,47 @@ let transforms: Array<TransformFunction>
 let dataGenFns: Array<DataGenFunction>
 let platformDirectives
 let isPlatformReservedTag
-let staticRenderFns
+let staticRenderFns //存放静态节点
 let onceCount
 let currentOptions
+
+
+/**
+ *直接看这个版本的吧
+
+ function generate ( ast, options ) {
+  var state = new CodegenState(options);
+  var code = ast ? genElement(ast, state) : '_c("div")';
+  return {
+    render: ("with(this){return " + code + "}"),
+    staticRenderFns: state.staticRenderFns
+  }
+  //
+  state打印出来看到的属性有：dataGenFns, directives(这里面是各种指令方法),
+  maybeComponent,options,staticRenderFns:[], transforms: [],warn:function
+  我暂时还不知道这个state使用感干啥的。。。先去看genElement函数
+
+
+
+
+  这里code打印出来是下面这个
+  _c('div',{attrs:{"id":"app"}},[_v("\n    "+_s(message)+"\n    "),_c('div',[_v("\n      这里是一个静态子节点\n      "),_c('span',[_v("\n        哈哈哈\n      ")]),_v(" "),_c('test'),_v(" "),_c('ul',_l((list),function(item){return _c('li',{attrs:{"title":item}})}))],1)])
+vue.js:9415 _c('div',[_v("这是一个自定义的component")])
+  来看genElement
+}
+ *
+ *
+ * function pluckModuleFunction<F: Function> (
+    modules: ?Array<Object>,
+    key: string
+  ): Array<F> {
+    return modules ? modules.map(m => m[key]).filter(_ => _) : []
+  }
+ *
+ *
+ *
+ *
+ */
 
 export function generate (
   ast: ASTElement | void,
@@ -29,8 +67,11 @@ export function generate (
   // save previous staticRenderFns so generate calls can be nested
 
   const prevStaticRenderFns: Array<string> = staticRenderFns
+
   const currentStaticRenderFns: Array<string> = staticRenderFns = []
+
   const prevOnceCount = onceCount
+  //这个就是上面state打印出来的
   onceCount = 0
   currentOptions = options
   warn = options.warn || baseWarn
@@ -39,11 +80,25 @@ export function generate (
   platformDirectives = options.directives || {}
   isPlatformReservedTag = options.isReservedTag || no
   const code = ast ? genElement(ast) : '_c("div")'
+  /**
+   * genElement()函数其实就是将ast对象转成下面code的字符串的样子
+   * code的返回值（genElement的返回值）
+   * _c('div',{attrs:{"id":"app"}},[_v("\n    "+_s(message)+"\n    "),_c('div',[_v("\n      这里是一个静态子节点\n      "),_c('span',[_v("\n        哈哈哈\n      ")]),_v(" "),_c('test'),_v(" "),_c('ul',_l((list),function(item){return _c('li',{attrs:{"title":item}})}))],1)])
+vue.js:9415 _c('div',[_v("这是一个自定义的component")])
+
+    //_c()用于创建标签，component
+    //_v()用于创建文本标签
+    //_l()我发现使用了v-for指令的节点都是用_l()来表示
+    //_e()
+   *
+   *
+   */
   staticRenderFns = prevStaticRenderFns
   onceCount = prevOnceCount
+
   return {
-    render: `with(this){return ${code}}`,
-    staticRenderFns: currentStaticRenderFns
+    render: `with(this){return ${code}}`, //函数体
+    staticRenderFns: currentStaticRenderFns //数组字符串的显示还是_c, _v这种形式和动态节点相同
   }
 }
 /**
@@ -56,22 +111,44 @@ export function generate (
  *
  *
  *
- *
+ *genElement就是将ast转成render函数的字符串的样子
  */
-
 function genElement (el: ASTElement): string {
+  //问题staticProcessed是用来做什么的
   if (el.staticRoot && !el.staticProcessed) {
+
+    //genStatic：生成静态节点，并把它存在staticRenderFns这个数组中
+    //作为render函数静态节点的返回
     return genStatic(el)
+
   } else if (el.once && !el.onceProcessed) {
+
+    //
     return genOnce(el)
+
   } else if (el.for && !el.forProcessed) {
+
+    //这个for返回的是_l()这个函数
     return genFor(el)
+
   } else if (el.if && !el.ifProcessed) {
+
+    //genIf()返回的是这样的(show)?_c('div',[_v("这里改成有if指令")]):_e()
+    //show就是我控制显示和隐藏的变量
+    //如果show是true就返回后面的_c(),如果show是false则返回_e()
     return genIf(el)
+
   } else if (el.tag === 'template' && !el.slotTarget) {
+
+    //genChildren()返回的是，如果是template就直接返回子节点的genElement()
     return genChildren(el) || 'void 0'
+
   } else if (el.tag === 'slot') {
+
+    //genSlot()返回的是，_t()，如果是标签切是具名slot函数的参数是footer，
+    //如果是文本，参数是default
     return genSlot(el)
+
   } else {
     // component or element
     let code
