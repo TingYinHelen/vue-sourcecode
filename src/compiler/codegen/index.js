@@ -109,7 +109,7 @@ vue.js:9415 _c('div',[_v("这是一个自定义的component")])
  *
  *
  *
- *
+ *先简单看一下genElement返回值，然后在继续查看每一个函数是怎么处理的
  *
  *genElement就是将ast转成render函数的字符串的样子
  */
@@ -150,14 +150,19 @@ function genElement (el: ASTElement): string {
     return genSlot(el)
 
   } else {
+    //静态节点但是又不是静态根节点走这一步
     // component or element
     let code
+    //其实下面几个属性我还不知道是什么东西:el.plain,el.inlineTemplate
+    //我这里测试静态节点data是undefined
+    //先看看genChildren()
     if (el.component) {
       code = genComponent(el.component, el)
     } else {
       const data = el.plain ? undefined : genData(el)
-
+      //这里的children就是返回每一个节点ast转成render字符串
       const children = el.inlineTemplate ? null : genChildren(el, true)
+
       code = `_c('${el.tag}'${
         data ? `,${data}` : '' // data
       }${
@@ -387,19 +392,34 @@ function genScopedSlot (key: string, el: ASTElement) {
       : genElement(el)
   }}]`
 }
-
+/**
+ * 如果是静态节点的时候会执行genChildren
+ *
+ *
+ */
 function genChildren (el: ASTElement, checkSkip?: boolean): string | void {
   const children = el.children
+  //递归
   if (children.length) {
+
     const el: any = children[0]
+
+
     // optimize single v-for
+    //优化有v-for,这里不忙管
     if (children.length === 1 &&
         el.for &&
         el.tag !== 'template' &&
         el.tag !== 'slot') {
       return genElement(el)
     }
+
+    //还不知道这里是什么，但是静态节点都返回的是0
     const normalizationType = getNormalizationType(children)
+
+    //这里在遍历子节点，有标签的部分就继续调用genElement()，
+    //如果是文本节点的就直接调用genText()返回_v(text.text)
+    //如果是标签节点就直接调用genElement()然后递归
     return `[${children.map(genNode).join(',')}]${
       checkSkip
         ? normalizationType ? `,${normalizationType}` : ''
@@ -449,6 +469,7 @@ function genNode (node: ASTNode): string {
 }
 
 function genText (text: ASTText | ASTExpression): string {
+  //有{{}}这个的就有text.expression
   return `_v(${text.type === 2
     ? text.expression // no need for () because already wrapped in _s()
     : transformSpecialNewlines(JSON.stringify(text.text))
@@ -491,6 +512,7 @@ function genProps (props: Array<{ name: string, value: string }>): string {
 }
 
 // #3895, #4268
+//将换行符转义（\u2028会编译成换行符。）
 function transformSpecialNewlines (text: string): string {
   return text
     .replace(/\u2028/g, '\\u2028')
