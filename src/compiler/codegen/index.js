@@ -142,6 +142,12 @@ function genElement (el: ASTElement): string {
 
     //genChildren()返回的是，如果是template就直接返回子节点的genElement()
     return genChildren(el) || 'void 0'
+    //基础知识补充
+    /**
+     *这里为什么使用void 0而不使用undefined
+     *这里直接贴我的简书:http://www.jianshu.com/p/51e5eaf438e7
+     */
+
 
   } else if (el.tag === 'slot') {
 
