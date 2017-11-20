@@ -21,6 +21,7 @@ export function compile (
   const directives = options.directives
     ? extend(extend({}, baseOptions.directives), options.directives)
     : baseOptions.directives
+
   const compiled = baseCompile(template, {
     modules,
     directives,
