@@ -1,3 +1,14 @@
+//补充一下flow的基础
+/**
+ * flow的基础类型：
+ * boolean，number，string，null，void
+ * 复杂类型检测
+ *
+ * Object，Array，函数，自定义Class
+ * flow中的void对应的是js中的undefined
+ *
+ *下面是添加了flow-typed作为检测
+ */
 declare type CompilerOptions = {
   warn?: Function; // allow customizing warning in different environments; e.g. node
   expectHTML?: boolean; // only false for non-web builds

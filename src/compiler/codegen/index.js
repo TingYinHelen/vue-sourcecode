@@ -165,8 +165,10 @@ function genElement (el: ASTElement): string {
     if (el.component) {
       code = genComponent(el.component, el)
     } else {
+      // data这里返回的是元素的属性，staticStyle:{"border":"1px solid red"}，attrs:{"id":"app"}
       const data = el.plain ? undefined : genData(el)
-      //这里的children就是返回每一个节点ast转成render字符串
+
+
       const children = el.inlineTemplate ? null : genChildren(el, true)
 
       code = `_c('${el.tag}'${
@@ -176,6 +178,7 @@ function genElement (el: ASTElement): string {
       })`
     }
     // module transforms
+    //问题这里的transforms是什么
     for (let i = 0; i < transforms.length; i++) {
       code = transforms[i](el, code)
     }
@@ -265,10 +268,12 @@ function genFor (el: any): string {
 }
 
 function genData (el: ASTElement): string {
+  // 遍历AST的每一个属性，如果有该属性，就把它加入对象中，最后返回的是一个对象样子的字符串
   let data = '{'
 
   // directives first.
   // directives may mutate the el's other properties before they are generated.
+  //先查看有指令的元素，因为指令有可能会在他生成之前改变其他的属性
   const dirs = genDirectives(el)
   if (dirs) data += dirs + ','
 
@@ -280,6 +285,7 @@ function genData (el: ASTElement): string {
   if (el.ref) {
     data += `ref:${el.ref},`
   }
+  //如果有ref使用v-for指定的el.refInfor就是refInFor
   if (el.refInFor) {
     data += `refInFor:true,`
   }
@@ -292,10 +298,12 @@ function genData (el: ASTElement): string {
     data += `tag:"${el.tag}",`
   }
   // module data generation functions
+  //staticClass 和staticStyle
   for (let i = 0; i < dataGenFns.length; i++) {
     data += dataGenFns[i](el)
   }
   // attributes
+  //元素的attrs
   if (el.attrs) {
     data += `attrs:{${genProps(el.attrs)}},`
   }
@@ -322,7 +330,7 @@ function genData (el: ASTElement): string {
   if (el.model) {
     data += `model:{value:${el.model.value},callback:${el.model.callback}},`
   }
-  // inline-template
+  // inline-template(内联模板)
   if (el.inlineTemplate) {
     const inlineTemplate = genInlineTemplate(el)
     if (inlineTemplate) {
@@ -412,7 +420,7 @@ function genChildren (el: ASTElement, checkSkip?: boolean): string | void {
 
 
     // optimize single v-for
-    //优化有v-for,这里不忙管
+    //有子节点就继续调用genElement
     if (children.length === 1 &&
         el.for &&
         el.tag !== 'template' &&
