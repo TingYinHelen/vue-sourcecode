@@ -58,6 +58,7 @@ vue.js:9415 _c('div',[_v("这是一个自定义的component")])
  */
 
 //这里做一下说明，这里的option中的属性是放在原型中的
+//想看一下这个option里到底是什么东西
 //继续从调用generate的函数开始看起
 export function generate (
   ast: ASTElement | void,
