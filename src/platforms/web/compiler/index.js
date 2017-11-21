@@ -4,13 +4,17 @@ import { extend, genStaticKeys, noop } from 'shared/util'
 import { warn } from 'core/util/debug'
 import { compile as baseCompile } from 'compiler/index'
 import { detectErrors } from 'compiler/error-detector'
+//modules是有klass,style的数组
 import modules from './modules/index'
+
 import directives from './directives/index'
 import { isReservedTag, mustUseProp, getTagNamespace, isPreTag } from '../util/index'
 import { isUnaryTag } from './util'
 
 const cache: { [key: string]: CompiledFunctionResult } = Object.create(null)
 
+//compile中的option是扩展的这里的option
+// 这里就设置了option的默认值
 export const baseOptions: CompilerOptions = {
   expectHTML: true,
   modules,
@@ -22,11 +26,19 @@ export const baseOptions: CompilerOptions = {
   getTagNamespace,
   isPreTag
 }
-
+/**
+ * 这里可以看出，weex和web使用的compile都是同一个
+ * import { compile as baseCompile } from 'compiler/index'
+ * 只是options的参数配置不同
+ * compile()的用法就是直接传template进去
+ */
 export function compile (
   template: string,
   options?: CompilerOptions
 ): CompiledResult {
+
+  //如果有option将它exptend到baseOptions上，如果没有，就直接给baseOptions
+
   options = options
     ? extend(extend({}, baseOptions), options)
     : baseOptions

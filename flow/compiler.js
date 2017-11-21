@@ -12,18 +12,30 @@
 declare type CompilerOptions = {
   warn?: Function; // allow customizing warning in different environments; e.g. node
   expectHTML?: boolean; // only false for non-web builds
+  //这里我猜测是在web的时候是true，在weex的时候是false
   modules?: Array<ModuleOptions>; // platform specific modules; e.g. style; class
+  //平台上指定的模块style和class
   staticKeys?: string; // a list of AST properties to be considered static; for optimization
+  //一串被认为是static的属性
   directives?: { [key: string]: Function }; // platform specific directives
+  //directives
   isUnaryTag?: (tag: string) => ?boolean; // check if a tag is unary for the platform
+  //isUnaryTag这个没懂
   isReservedTag?: (tag: string) => ?boolean; // check if a tag is a native for the platform
+  //没懂
   mustUseProp?: (tag: string, type: ?string, name: string) => boolean; // check if an attribute should be bound as a property
+  //
   isPreTag?: (attr: string) => ?boolean; // check if a tag needs to preserve whitespace
+
   getTagNamespace?: (tag: string) => ?string; // check the namespace for a tag
   transforms?: Array<Function>; // a list of transforms on parsed AST before codegen
+
   preserveWhitespace?: boolean;
+
   isFromDOM?: boolean;
+
   shouldDecodeTags?: boolean;
+
   shouldDecodeNewlines?: boolean;
 
   // runtime user-configurable
