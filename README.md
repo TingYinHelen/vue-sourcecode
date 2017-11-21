@@ -8,5 +8,7 @@
 
 <p align="center">
     <img width="400px" src="https://mmbiz.qpic.cn/mmbiz_png/JNB6ic5PBMj83SLZny6GCmw2ib2RLBEJaEKQiaicw3QyrwofDEAhEgpGEBKC2CmFtRvuPS8L2RI6bYbxkRLmRYwdlA/640?wx_fmt=png&tp=webp&wxfrom=5&wx_lazy=1">
-    [用void 0替代undefined]: http://www.jianshu.com/p/51e5eaf438e7  "用void 0替代undefined"
+    <div>
+        <a href="http://www.jianshu.com/p/51e5eaf438e7">用void 0替代undefined</a>
+    </div>
 </p>
