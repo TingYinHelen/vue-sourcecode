@@ -22,9 +22,12 @@ export type Config = {
   _maxUpdateCount: number;
 };
 
+//这里是一些vue的全局配置
+
 const config: Config = {
   /**
    * Option merge strategies (used in core/util/options)
+   * 自定义选项合并策略，这里的代码后期再来看
    */
   optionMergeStrategies: Object.create(null),
 
@@ -34,7 +37,9 @@ const config: Config = {
   silent: false,
 
   /**
-   * Whether to enable devtools
+   * Whether to enable devtools(在process.env.NODE_ENV变量中判断是否是开发环境)
+   * 在devtools为true时，浏览器控制台将显示vue的panel
+   *
    */
   devtools: process.env.NODE_ENV !== 'production',
 
@@ -50,6 +55,7 @@ const config: Config = {
 
   /**
    * Custom user key aliases for v-on
+   * 自定义keycodes
    */
   keyCodes: Object.create(null),
 

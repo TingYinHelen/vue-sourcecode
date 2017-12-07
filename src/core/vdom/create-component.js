@@ -136,6 +136,7 @@ export function createComponentInstanceForVnode (
   refElm?: ?Node
 ): Component {
   const vnodeComponentOptions = vnode.componentOptions
+  // 初始化
   const options: InternalComponentOptions = {
     _isComponent: true,
     parent,

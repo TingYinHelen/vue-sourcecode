@@ -11,6 +11,7 @@ export type AsyncComponent = (
   reject: (reason?: any) => void
 ) => Promise<Component> | Component | void;
 
+
 export interface ComponentOptions<V extends Vue> {
   data?: Object | ((this: V) => Object);
   props?: string[] | { [key: string]: PropOptions | Constructor | Constructor[] };

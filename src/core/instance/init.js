@@ -8,6 +8,12 @@ import { initLifecycle, callHook } from './lifecycle'
 import { mergeOptions } from '../util/index'
 
 let uid = 0
+/**
+ * It is my idea. You stole my thought.
+ * I wanna respct everyone. But it is difficault that make everyone respect me.
+ * eventhough my loved ones.
+ *
+ */
 
 export function initMixin (Vue: Class<Component>) {
   Vue.prototype._init = function (options?: Object) {
@@ -21,8 +27,18 @@ export function initMixin (Vue: Class<Component>) {
       // optimize internal component instantiation
       // since dynamic options merging is pretty slow, and none of the
       // internal component options needs special treatment.
+
+      /**
+       * 翻译一下：
+       * 优化内部的 component 实例
+       * 当动态的options的合并太慢，并且没有内部的component options需要特别处理
+       * 在createComponentInstanceForVnode有初始化
+       */
+
+
       initInternalComponent(vm, options)
     } else {
+
       vm.$options = mergeOptions(
         resolveConstructorOptions(vm.constructor),
         options || {},
