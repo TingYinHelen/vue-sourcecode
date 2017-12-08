@@ -1,5 +1,5 @@
 /* @flow */
-
+//这里可以看到 Vue是从'./web-runtime'引入的
 import Vue from './web-runtime'
 import { warn, cached } from 'core/util/index'
 import { query } from 'web/util/index'

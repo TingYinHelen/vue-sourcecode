@@ -54,6 +54,11 @@ const builds = {
     env: 'production',
     banner
   },
+  /**
+   * 从这里可以找到项目开发环境的入口
+   * 项目的入口就是
+   * web-runtime-with-compiler.js
+   */
   // Runtime+compiler development build (Browser)
   'web-full-dev': {
     entry: path.resolve(__dirname, '../src/entries/web-runtime-with-compiler.js'),

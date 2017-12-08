@@ -1,5 +1,5 @@
 /* @flow */
-
+ //从这里看出Vue是从'core/index'引入
 import Vue from 'core/index'
 import config from 'core/config'
 import { extend, noop } from 'shared/util'

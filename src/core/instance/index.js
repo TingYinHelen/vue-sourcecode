@@ -6,12 +6,13 @@ import { lifecycleMixin } from './lifecycle'
 import { warn } from '../util/index'
 
 //这里是框架的开始，从这里new一个vue实例
-
+//Vue的构造函数
 function Vue (options) {
   if (process.env.NODE_ENV !== 'production' &&
     !(this instanceof Vue)) {
     warn('Vue is a constructor and should be called with the `new` keyword')
   }
+
   this._init(options)
 }
 //这里提供的_init()方法，在new Vue()的时候执行this._init()

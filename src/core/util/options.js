@@ -18,7 +18,12 @@ import {
  * how to merge a parent option value and a child option
  * value into the final value.
  */
-const strats = config.optionMergeStrategies
+/**
+ * Option的覆盖策略是一系列的functions，将控制怎么合并parent option和child option
+ * 到最后的value
+ */
+
+const strats = config.optionMergeStrategies //{} 自定义选项合并策略
 
 /**
  * Options with restrictions
@@ -188,6 +193,9 @@ strats.computed = function (parentVal: ?Object, childVal: ?Object): ?Object {
 
 /**
  * Default strategy.
+ * 默认的策略。。。。。
+ * defaultStart(parentVal, childVal)
+ * 如果childVal有值就返回childVal，如果没有就返回parentVal
  */
 const defaultStrat = function (parentVal: any, childVal: any): any {
   return childVal === undefined
@@ -269,6 +277,7 @@ export function mergeOptions (
   if (process.env.NODE_ENV !== 'production') {
     checkComponents(child)
   }
+  //////////////////////////////////
   normalizeProps(child)
   normalizeDirectives(child)
   const extendsFrom = child.extends
@@ -286,20 +295,41 @@ export function mergeOptions (
       parent = mergeOptions(parent, mixin, vm)
     }
   }
+  //////////////////////////////////
+
+
+
+
   const options = {}
   let key
+  //constructor
   for (key in parent) {
     mergeField(key)
   }
+
+  //$option
   for (key in child) {
     if (!hasOwn(parent, key)) {
       mergeField(key)
     }
   }
+
   function mergeField (key) {
+    /**
+     * strat => function
+     * strats就是自定义选项合并策略
+     * 如果有自定义合并策略就用自定义的，如果没有就用默认的策略
+     * defaultStart(parentVal, childVal)
+     * 默认的合并策略就是
+     * 如果childVal有值就返回childVal，如果没有就返回parentVal
+     */
     const strat = strats[key] || defaultStrat
+
+    //options
     options[key] = strat(parent[key], child[key], vm, key)
+
   }
+
   return options
 }
 

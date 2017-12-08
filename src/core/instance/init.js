@@ -14,7 +14,7 @@ let uid = 0
  * eventhough my loved ones.
  *
  */
-
+//vm 是new的vue实例
 export function initMixin (Vue: Class<Component>) {
   Vue.prototype._init = function (options?: Object) {
     const vm: Component = this
@@ -39,6 +39,17 @@ export function initMixin (Vue: Class<Component>) {
       initInternalComponent(vm, options)
     } else {
 
+      //不看resolveConstructorOptions
+      /**
+       * 1.x版本的写法
+       * this.$options = mergeOptions(
+       *  this.constructor.options,
+       *  options,
+       *  this
+       * )
+       *
+       *
+       */
       vm.$options = mergeOptions(
         resolveConstructorOptions(vm.constructor),
         options || {},
@@ -54,6 +65,7 @@ export function initMixin (Vue: Class<Component>) {
     }
     // expose real self
     vm._self = vm
+    //
     initLifecycle(vm)
     initEvents(vm)
     initRender(vm)
@@ -84,6 +96,11 @@ function initInternalComponent (vm: Component, options: InternalComponentOptions
 }
 
 export function resolveConstructorOptions (Ctor: Class<Component>) {
+  /**
+   * Ctor 是构造函数
+   *
+   *
+   */
   let options = Ctor.options
   if (Ctor.super) {
     const superOptions = Ctor.super.options
