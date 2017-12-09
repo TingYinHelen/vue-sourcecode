@@ -89,6 +89,7 @@ const config: Config = {
 
   /**
    * List of asset types that a component can own.
+   * 这里就是初始化一个实例之后，添加到options里面的
    */
   _assetTypes: [
     'component',
