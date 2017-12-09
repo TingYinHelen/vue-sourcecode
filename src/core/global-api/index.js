@@ -27,6 +27,13 @@ export function initGlobalAPI (Vue: GlobalAPI) {
   Vue.nextTick = util.nextTick
 
   Vue.options = Object.create(null)
+  /**
+   *config._assetTypes: [
+    'component',
+    'directive',
+    'filter'
+  ],
+   */
   config._assetTypes.forEach(type => {
     Vue.options[type + 's'] = Object.create(null)
   })

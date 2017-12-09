@@ -6,7 +6,14 @@ import { isServerRendering } from 'core/util/env'
 
 /**
  * initGlobalAPI的作用是在Vue构造函数上挂载静态的属性和方法
- *
+ * 现在就比较明了了，initGlobalAPI是只要引入了vue框架就会执行的一个东东
+ * 不用创建实例也会执行，这个时候options上已经有了
+ * config._assetTypes: [
+    'component',
+    'directive',
+    'filter'
+  ],
+  这个三个属性
  */
 initGlobalAPI(Vue)
 
