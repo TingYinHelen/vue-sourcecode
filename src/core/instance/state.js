@@ -107,7 +107,9 @@ function initData (vm: Component) {
     }
   }
   // observe data
-  //这里应该才是经典中的经典
+  /**
+   * 进入响应式系统
+   */
   observe(data, true /* asRootData */)
 }
 

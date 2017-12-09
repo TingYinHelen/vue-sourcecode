@@ -37,13 +37,10 @@ export class Observer {
   vmCount: number; // number of vms that has this object as root $data
 
   constructor (value: any) {
-    this.value = value //value就是data本身
-
-
-    //dep是啥？额。。。
+    this.value = value
     this.dep = new Dep()
     this.vmCount = 0
-    //
+
     def(value, '__ob__', this)
     if (Array.isArray(value)) {
       const augment = hasProto
@@ -111,10 +108,23 @@ function copyAugment (target: Object, src: Object, keys: Array<string>) {
  * returns the new observer if successfully observed,
  * or the existing observer if the value already has one.
  */
+/**
+ * 尝试创建一个observer的实例给你一个值
+ * 如果成功观察到，就返回一个新的observer
+ * 否则的话，如果已经存在一个值就使用先有的observer
+ */
 export function observe (value: any, asRootData: ?boolean): Observer | void {
+  //判断是否是对象
   if (!isObject(value)) {
     return
   }
+  /**
+   * value就是data
+   * 如果data有__ob__，并且value.__ob__是Observer的一个实例(说明已经存在一个Observer)
+   * ob = value.__ob__
+   * 否则的话生成一个Observer实例
+   *
+   */
   let ob: Observer | void
   if (hasOwn(value, '__ob__') && value.__ob__ instanceof Observer) {
     ob = value.__ob__
@@ -125,6 +135,7 @@ export function observe (value: any, asRootData: ?boolean): Observer | void {
     Object.isExtensible(value) &&
     !value._isVue
   ) {
+    //生成Observer
     ob = new Observer(value)
   }
   if (asRootData && ob) {
