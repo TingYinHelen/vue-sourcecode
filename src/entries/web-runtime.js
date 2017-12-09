@@ -16,12 +16,14 @@ import {
 } from 'web/util/index'
 
 // install platform specific utils
+// 安装平台特有的一些方法
 Vue.config.isUnknownElement = isUnknownElement
 Vue.config.isReservedTag = isReservedTag
 Vue.config.getTagNamespace = getTagNamespace
 Vue.config.mustUseProp = mustUseProp
 
 // install platform runtime directives & components
+// 安装平台特有的指令和组件
 extend(Vue.options.directives, platformDirectives)
 extend(Vue.options.components, platformComponents)
 

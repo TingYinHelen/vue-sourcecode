@@ -23,6 +23,9 @@ export function initMixin (Vue: Class<Component>) {
     // a flag to avoid this being observed
     vm._isVue = true
     // merge options
+    /**
+     * 在开发中我们并没有使用_isComponent，猜测是vue自身使用的
+     */
     if (options && options._isComponent) {
       // optimize internal component instantiation
       // since dynamic options merging is pretty slow, and none of the
