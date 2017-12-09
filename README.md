@@ -4,6 +4,14 @@
 
 </p>
 
+## 执行的流程
+
+<p>
+    从npm script可以看出，dev环境执行的是build/config.js文件中web-full-dev下的 entry,作为项目的入口。
+    然后走`web-runtime-with-compiler.js`引入`import Vue from './web-runtime'`
+    然后引入核心代码`import Vue from 'core/index'`
+</p>
+
 ## 数据绑定原理图
 
 <p align="center">
@@ -12,3 +20,5 @@
         <a href="http://www.jianshu.com/p/51e5eaf438e7">用void 0替代undefined</a>
     </div>
 </p>
+
+
