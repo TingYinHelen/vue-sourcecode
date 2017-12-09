@@ -73,13 +73,15 @@ function initProps (vm: Component, props: Object) {
   }
   observerState.shouldConvert = true
 }
-
+/**
+ * 这里绑定数据
+ *
+ */
 function initData (vm: Component) {
   let data = vm.$options.data
-  data = vm._data = typeof data === 'function'
-    ? data.call(vm)
-    : data || {}
+  data = vm._data = typeof data === 'function' ? data.call(vm) : data || {}
   if (!isPlainObject(data)) {
+    //如果不是Object就提示
     data = {}
     process.env.NODE_ENV !== 'production' && warn(
       'data functions should return an object:\n' +
@@ -93,16 +95,19 @@ function initData (vm: Component) {
   let i = keys.length
   while (i--) {
     if (props && hasOwn(props, keys[i])) {
+      //检查data和props有没有冲突
       process.env.NODE_ENV !== 'production' && warn(
         `The data property "${keys[i]}" is already declared as a prop. ` +
         `Use prop default value instead.`,
         vm
       )
     } else {
+      //走的这里，参数是vm和key
       proxy(vm, keys[i])
     }
   }
   // observe data
+  //这里应该才是经典中的经典
   observe(data, true /* asRootData */)
 }
 
@@ -233,8 +238,9 @@ export function stateMixin (Vue: Class<Component>) {
     }
   }
 }
-
+//代理，使得_data上的数据可以直接通过this.key来访问
 function proxy (vm: Component, key: string) {
+  //判断是否是保留字，
   if (!isReserved(key)) {
     Object.defineProperty(vm, key, {
       configurable: true,

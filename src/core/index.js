@@ -1,5 +1,7 @@
 //这里进入框架的核心代码'./instance/index'
+
 import Vue from './instance/index'
+initGlobalAPI(Vue)
 
 import { initGlobalAPI } from './global-api/index'
 import { isServerRendering } from 'core/util/env'

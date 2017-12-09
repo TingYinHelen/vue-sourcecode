@@ -11,6 +11,10 @@ const ALWAYS_NORMALIZE = 2
 
 // wrapper function for providing a more flexible interface
 // without getting yelled at by flow
+/**
+ * 封装函数来提供更多的可配置的接口
+ * 不需要声明flow
+ */
 export function createElement (
   context: Component,
   tag: any,

@@ -61,6 +61,12 @@ export function initMixin (Vue: Class<Component>) {
     }
 
     /* istanbul ignore else */
+    /**
+     * 如果不是生产环境就会给两个实例属性
+     * vm._renderProxy = vm
+     * vm._self = vm
+     * 属性值就是实例本身
+     */
     if (process.env.NODE_ENV !== 'production') {
       initProxy(vm)
     } else {
@@ -68,13 +74,26 @@ export function initMixin (Vue: Class<Component>) {
     }
     // expose real self
     vm._self = vm
-    //
+
+    /**
+     * 以上已经完成option的合并工作
+     * 下面就进行初始化工作和实例对象的设计
+     */
+    /**
+     * 在initState前后分别回调了生命周期钩子：beforeCreate和created
+     */
+    /**
+     *
+     initLifecycle给实例添加了一些属性，$parent,$root,$children,$refs,_watcher
+    _inactive,_isMounted,_isDestroyed,_isBeingDestroyed
+     */
     initLifecycle(vm)
     initEvents(vm)
     initRender(vm)
     callHook(vm, 'beforeCreate')
-    initState(vm)
+    initState(vm)  //会分别initProps,initMethods,initData,initComputed,initWatch
     callHook(vm, 'created')
+
     if (vm.$options.el) {
       vm.$mount(vm.$options.el)
     }
@@ -105,6 +124,7 @@ export function resolveConstructorOptions (Ctor: Class<Component>) {
    *
    */
   let options = Ctor.options
+  //Ctor.super暂时没有理解
   if (Ctor.super) {
     const superOptions = Ctor.super.options
     const cachedSuperOptions = Ctor.superOptions

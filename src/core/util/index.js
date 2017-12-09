@@ -1,3 +1,6 @@
+/**
+ * 将基础函数导出
+ */
 export * from 'shared/util'
 export * from './lang'
 export * from './env'
