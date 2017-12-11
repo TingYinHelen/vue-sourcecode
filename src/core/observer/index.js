@@ -31,6 +31,13 @@ export const observerState = {
  * object's property keys into getter/setters that
  * collect dependencies and dispatches updates.
  */
+/**
+ * Observer会依附在每一个观察对象。
+ * observer会将对象的属性key转入到getter/setter
+ * 来搜集依赖和dispatche 更新
+ *
+ * Observer的作用就是就是遍历对象的所有属性进行双向绑定
+ */
 export class Observer {
   value: any;
   dep: Dep;
@@ -38,9 +45,10 @@ export class Observer {
 
   constructor (value: any) {
     this.value = value
+    //这里暂时不看
     this.dep = new Dep()
     this.vmCount = 0
-
+    //
     def(value, '__ob__', this)
     if (Array.isArray(value)) {
       const augment = hasProto
@@ -49,7 +57,10 @@ export class Observer {
       augment(value, arrayMethods, arrayKeys)
       this.observeArray(value)
     } else {
-      //只有对象才走这一步
+      /**
+       * 只有对象才走这一步
+       * 因为在constructor里面所以在new Observer的时候执行
+       */
       this.walk(value)
     }
   }
@@ -59,7 +70,7 @@ export class Observer {
    * getter/setters. This method should only be called when
    * value type is Object.
    */
-  //walk就是遍历data的所有属性
+  //walk就是遍历data的所有属性，obj目前就是data
   walk (obj: Object) {
     const keys = Object.keys(obj)
     for (let i = 0; i < keys.length; i++) {
@@ -109,9 +120,12 @@ function copyAugment (target: Object, src: Object, keys: Array<string>) {
  * or the existing observer if the value already has one.
  */
 /**
- * 尝试创建一个observer的实例给你一个值
+ * 没懂这句话是啥意思。。
+ *
+ * 尝试创建一个observer的实例
  * 如果成功观察到，就返回一个新的observer
  * 否则的话，如果已经存在一个值就使用先有的observer
+ * value 目前是data
  */
 export function observe (value: any, asRootData: ?boolean): Observer | void {
   //判断是否是对象
@@ -125,6 +139,7 @@ export function observe (value: any, asRootData: ?boolean): Observer | void {
    * 否则的话生成一个Observer实例
    *
    */
+
   let ob: Observer | void
   if (hasOwn(value, '__ob__') && value.__ob__ instanceof Observer) {
     ob = value.__ob__
@@ -146,8 +161,11 @@ export function observe (value: any, asRootData: ?boolean): Observer | void {
 
 /**
  * Define a reactive property on an Object.
+ * defineReactive(obj, keys[i], obj[keys[i]])
  */
-// defineReactive(obj, keys[i], obj[keys[i]])
+/**
+ * 定义一个响应式的属性在对象上
+ */
 
 export function defineReactive (
   obj: Object,
@@ -160,32 +178,59 @@ export function defineReactive (
   //dep.depend()是绑定依赖，dep.notify()是触发通知
   //这也说明只有被get()过的属性才会绑定依赖，未被get()就忽略不管
 
-
-
   const dep = new Dep()
+  //返回属性描述符
 
   const property = Object.getOwnPropertyDescriptor(obj, key)
+  //如果该属性不能被删除或修改则不继续执行
   if (property && property.configurable === false) {
     return
   }
 
   // cater for pre-defined getter/setters
-  const getter = property && property.get
+  /**
+   * 直接将对象描述符的get和set封装成getter和setter函数
+   * 当没有手动设置get和set的时候，getter和setter是undefined
+   */
+  const getter =  property && property.get
   const setter = property && property.set
   //进行递归绑定
   let childOb = observe(val)
 
   //core，使用defineProperty来绑定数据
+  /**
+   * 简化一下:
+   * Object.defineProperty(data, key, {
+   *  enumerable: true,
+   *  configurable: true,
+   *  get(){
+   *    return value
+   *  },
+   *  set(newVal){
+   *    if(val == newVal){
+   *      return
+   *    }
+   *    observe(newVal)
+   *  }
+   * })
+   *
+   */
   Object.defineProperty(obj, key, {
     enumerable: true,
     configurable: true,
     get: function reactiveGetter () {
+      /**
+       *
+       */
       const value = getter ? getter.call(obj) : val
+
       if (Dep.target) {
-        //这是啥？
-
+        /**
+         * 收集依赖
+         * 然后递归手机依赖
+         * 如果是数组，将使用dependArray
+         */
         dep.depend()
-
         if (childOb) {
           childOb.dep.depend()
         }
@@ -193,24 +238,39 @@ export function defineReactive (
           dependArray(value)
         }
       }
+
       return value
     },
     set: function reactiveSetter (newVal) {
+      /**
+       * 在set之前先调用一次getter,将原来本来有的值取到
+       */
       const value = getter ? getter.call(obj) : val
       /* eslint-disable no-self-compare */
+      /**
+       *
+       *
+       */
       if (newVal === value || (newVal !== newVal && value !== value)) {
         return
       }
+      /**
+       *
+       *
+       */
       /* eslint-enable no-self-compare */
       if (process.env.NODE_ENV !== 'production' && customSetter) {
         customSetter()
       }
+
       if (setter) {
         setter.call(obj, newVal)
       } else {
         val = newVal
       }
+
       childOb = observe(newVal)
+
       dep.notify()
     }
   })

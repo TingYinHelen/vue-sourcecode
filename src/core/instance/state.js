@@ -111,6 +111,11 @@ function initData (vm: Component) {
    * 进入响应式系统
    */
   observe(data, true /* asRootData */)
+  /**
+   * observer => new Observer() =>
+   * this.walk(value) => defineReactive() =>
+   * Object.defineProperty()
+   */
 }
 
 const computedSharedDefinition = {
