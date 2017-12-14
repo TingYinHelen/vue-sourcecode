@@ -52,6 +52,9 @@ export const nextTick = (function () {
     pending = false
     const copies = callbacks.slice(0)
     callbacks.length = 0
+    /**
+     * 在这里执行每一个callback
+     */
     for (let i = 0; i < copies.length; i++) {
       copies[i]()
     }

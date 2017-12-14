@@ -30,6 +30,10 @@ export function parsePath (path: string): any {
   if (bailRE.test(path)) {
     return
   } else {
+    /**
+     * 这里解决的应该就是当watch的是'a.b'这种属性
+     * 假设就是a属性，返回的就是a
+     */
     const segments = path.split('.')
     return function (obj) {
       for (let i = 0; i < segments.length; i++) {

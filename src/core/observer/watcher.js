@@ -35,12 +35,15 @@ export default class Watcher {
   newDepIds: Set;
   getter: Function;
   value: any;
-
+  /**
+   *
+   * @param {*} options
+   */
   constructor (
     vm: Component,
-    expOrFn: string | Function,
+    expOrFn: string | Function, //就是监听的属性
     cb: Function,
-    options?: Object
+    options?: Object //
   ) {
     this.vm = vm
     vm._watchers.push(this)
@@ -68,6 +71,11 @@ export default class Watcher {
     if (typeof expOrFn === 'function') {
       this.getter = expOrFn
     } else {
+      /**
+       *  this.getter就是watch的属性
+       *  取值就会触发data的get，
+       *  就会将watch.target设置成 dep.target然后存入依赖队列
+       */
       this.getter = parsePath(expOrFn)
       if (!this.getter) {
         this.getter = function () {}
@@ -86,22 +94,36 @@ export default class Watcher {
 
   /**
    * Evaluate the getter, and re-collect dependencies.
+   * 这里看一下呢
    */
   get () {
+    /**
+     * 将这个watcher实例设置为Dep.target
+     */
     pushTarget(this)
+    /**
+     * 获取值，触发defineProperty中的get方法
+     */
     const value = this.getter.call(this.vm, this.vm)
     // "touch" every property so they are all tracked as
     // dependencies for deep watching
+    /**
+     * deep watching是什么
+     */
     if (this.deep) {
       traverse(value)
     }
     popTarget()
+    /**
+     *
+     */
     this.cleanupDeps()
     return value
   }
 
   /**
    * Add a dependency to this directive.
+   *
    */
   addDep (dep: Dep) {
     const id = dep.id

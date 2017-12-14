@@ -210,9 +210,11 @@ export function defineReactive (
    *    if(val == newVal){
    *      return
    *    }
+   *    //对新的值进行观察
    *    observe(newVal)
    *  }
    * })
+   * 可以看出当我们获取或者设置data属性的时候就可以通过get和set就可以得到通知
    *
    */
   Object.defineProperty(obj, key, {
@@ -229,6 +231,7 @@ export function defineReactive (
          * 收集依赖
          * 然后递归手机依赖
          * 如果是数组，将使用dependArray
+         * 对象的每一个属性都要dep.depend()
          */
         dep.depend()
         if (childOb) {
