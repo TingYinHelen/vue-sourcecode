@@ -89,7 +89,9 @@ export function initMixin (Vue: Class<Component>) {
      */
     initLifecycle(vm)
     initEvents(vm)
+    //为什么initRender在beforeCreate之前
     initRender(vm)
+
     callHook(vm, 'beforeCreate')
     initState(vm)  //会分别initProps,initMethods,initData,initComputed,initWatch
     callHook(vm, 'created')

@@ -22,3 +22,5 @@ export function query (el: string | Element): Element {
   }
   return el
 }
+
+

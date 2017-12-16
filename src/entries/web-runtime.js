@@ -31,10 +31,20 @@ extend(Vue.options.components, platformComponents)
 Vue.prototype.__patch__ = inBrowser ? patch : noop
 
 // wrap mount
+/**
+ *
+ *
+ * @param {*} hydrating 我查了一下这个单词，是水合反应的意思
+ */
 Vue.prototype.$mount = function (
   el?: string | Element,
   hydrating?: boolean
 ): Component {
+  /**
+   * query => 检查el是否在页面中可以找到，
+   * 如果找不到就create一个div,
+   * 如果找到了，就返回document.querySelector(el)
+   */
   el = el && inBrowser ? query(el) : undefined
   return this._mount(el, hydrating)
 }
