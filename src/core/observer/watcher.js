@@ -41,7 +41,7 @@ export default class Watcher {
    */
   constructor (
     vm: Component,
-    expOrFn: string | Function, //就是监听的属性
+    expOrFn: string | Function, //watch可以是表达式也可以是计算属性函数
     cb: Function,
     options?: Object //
   ) {
@@ -87,6 +87,7 @@ export default class Watcher {
         )
       }
     }
+    //这句是核心，获取当前的值
     this.value = this.lazy
       ? undefined
       : this.get()

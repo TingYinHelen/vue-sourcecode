@@ -110,6 +110,10 @@ export function renderMixin (Vue: Class<Component>) {
   // internal render helpers.
   // these are exposed on the instance prototype to reduce generated render
   // code size.
+  /**
+   * 内部的渲染helper
+   * 这些将会暴露在原型对象上来减少生成render时候的代码大小
+   */
   Vue.prototype._o = markOnce
   Vue.prototype._n = toNumber
   Vue.prototype._s = _toString
@@ -124,4 +128,5 @@ export function renderMixin (Vue: Class<Component>) {
   Vue.prototype._v = createTextVNode
   Vue.prototype._e = createEmptyVNode
   Vue.prototype._u = resolveScopedSlots
+
 }

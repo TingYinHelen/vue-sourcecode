@@ -61,6 +61,11 @@ export function lifecycleMixin (Vue: Class<Component>) {
       }
     }
     callHook(vm, 'beforeMount')
+    /**
+     * class Watcher{
+     *  constructor(vm, expOrFn, cb, option){}
+     * }
+     */
     vm._watcher = new Watcher(vm, function updateComponent () {
       vm._update(vm._render(), hydrating)
     }, noop)

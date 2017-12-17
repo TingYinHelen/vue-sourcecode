@@ -90,13 +90,27 @@ export function initMixin (Vue: Class<Component>) {
     initLifecycle(vm)
     initEvents(vm)
     //为什么initRender在beforeCreate之前
+    /**
+     * 这个过程就是最终生成render函数
+     */
     initRender(vm)
 
     callHook(vm, 'beforeCreate')
     initState(vm)  //会分别initProps,initMethods,initData,initComputed,initWatch
     callHook(vm, 'created')
 
+    /**
+     * 生成了render之后调用 _mount()
+     * _mount()在initLifecycle中定义
+     */
     if (vm.$options.el) {
+      /**
+       * 在web-runtime.js和web-runtime-with-compiler.js中
+       * 都定义了$mount
+       * 根据不同的构建方式来选择使用哪一个$mount
+       * $mount主要做的事情就是：
+       * 触发beforeMount和mounted生命周期钩子
+       */
       vm.$mount(vm.$options.el)
     }
   }

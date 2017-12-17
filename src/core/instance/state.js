@@ -227,7 +227,10 @@ export function stateMixin (Vue: Class<Component>) {
 
   Vue.prototype.$set = set
   Vue.prototype.$delete = del
-
+  /**
+   * $watch 其实就是对Watcher的封装，
+   * 并且把作用域设置为当前对象
+   */
   Vue.prototype.$watch = function (
     expOrFn: string | Function,
     cb: Function,
