@@ -11,6 +11,10 @@ const idToTemplate = cached(id => {
   return el && el.innerHTML
 })
 
+/**
+ * 缓存了'./web-runtime'中的Vue.prototype.$mount
+ * 然后重新覆盖了Vue.prototype.$mount
+ */
 const mount = Vue.prototype.$mount
 Vue.prototype.$mount = function (
   el?: string | Element,
