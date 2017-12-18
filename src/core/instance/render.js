@@ -53,6 +53,10 @@ export function renderMixin (Vue: Class<Component>) {
 
   Vue.prototype._render = function (): VNode {
     const vm: Component = this
+    /**
+     * 结构$options中的render
+     * render是compileToFunctions执行后返回的
+     */
     const {
       render,
       staticRenderFns,
@@ -77,6 +81,10 @@ export function renderMixin (Vue: Class<Component>) {
     // render self
     let vnode
     try {
+      /**
+       * 运行render函数,
+       * 可以看出生成的是一个vnode
+       */
       vnode = render.call(vm._renderProxy, vm.$createElement)
     } catch (e) {
       /* istanbul ignore else */

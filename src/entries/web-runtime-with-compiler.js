@@ -11,11 +11,10 @@ const idToTemplate = cached(id => {
   return el && el.innerHTML
 })
 
-/**
- * 缓存了'./web-runtime'中的Vue.prototype.$mount
- * 然后重新覆盖了Vue.prototype.$mount
- */
+//缓存了'./web-runtime'中的Vue.prototype.$mount
 const mount = Vue.prototype.$mount
+
+//然后重新覆盖了Vue.prototype.$mount
 Vue.prototype.$mount = function (
   el?: string | Element,
   hydrating?: boolean
@@ -34,6 +33,7 @@ Vue.prototype.$mount = function (
   // resolve template/el and convert to render function
   if (!options.render) {
     let template = options.template
+
     if (template) {
       if (typeof template === 'string') {
         if (template.charAt(0) === '#') {
@@ -57,16 +57,21 @@ Vue.prototype.$mount = function (
     } else if (el) {
       template = getOuterHTML(el)
     }
+
+    //这里才是重点
     if (template) {
       const { render, staticRenderFns } = compileToFunctions(template, {
         warn: msg => warn(msg, this),
         shouldDecodeNewlines,
         delimiters: options.delimiters
       }, this)
+      //将compileToFunctions生成的render给this.$options
       options.render = render
       options.staticRenderFns = staticRenderFns
     }
   }
+  //用缓存了'./web-runtime'中的Vue.prototype.$mount来执行
+  //然额'./web-runtime'中的Vue.prototype.$mount'用的是lifecycle.js中的_mount
   return mount.call(this, el, hydrating)
 }
 

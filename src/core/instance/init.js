@@ -89,9 +89,12 @@ export function initMixin (Vue: Class<Component>) {
      */
     initLifecycle(vm)
     initEvents(vm)
-    //为什么initRender在beforeCreate之前
     /**
      * 这个过程就是最终生成render函数
+     * 这个版本initRender在beforCreate之前，因为
+     * beforeMount和mount是在_mount()中执行的
+     * initRender只是在vue原型上添加生成vnode需要的
+     * _n, _s, _l等东东
      */
     initRender(vm)
 
@@ -102,6 +105,7 @@ export function initMixin (Vue: Class<Component>) {
     /**
      * 生成了render之后调用 _mount()
      * _mount()在initLifecycle中定义
+     * 在_mount()中才真正生成了vnode
      */
     if (vm.$options.el) {
       /**

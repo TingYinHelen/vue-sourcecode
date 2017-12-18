@@ -13,10 +13,24 @@ import {
 
 let uid = 0
 
+// vm.$watch(
+//   function () {
+//     return this.a + this.b
+//   },
+//   function (newVal, oldVal) {
+//     // 做点什么
+//   }
+// )
+
 /**
  * A watcher parses an expression, collects dependencies,
  * and fires callback when the expression value changes.
  * This is used for both the $watch() api and directives.
+ */
+/**
+ * 一个watcher就是parse一个expression，收集依赖
+ * 当expression的值改变的时候fire一个回调函数
+ * 这被用在$watch() api 和 directives
  */
 export default class Watcher {
   vm: Component;
@@ -87,7 +101,10 @@ export default class Watcher {
         )
       }
     }
-    //这句是核心，获取当前的值
+    /**
+     * 这句是核心，获取当前的值
+     * 也就是对expOrFn就值
+     */
     this.value = this.lazy
       ? undefined
       : this.get()

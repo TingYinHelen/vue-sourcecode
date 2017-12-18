@@ -45,10 +45,8 @@ export class Observer {
 
   constructor (value: any) {
     this.value = value
-    //这里暂时不看
     this.dep = new Dep()
     this.vmCount = 0
-    //
     def(value, '__ob__', this)
     if (Array.isArray(value)) {
       const augment = hasProto

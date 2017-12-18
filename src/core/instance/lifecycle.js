@@ -65,8 +65,19 @@ export function lifecycleMixin (Vue: Class<Component>) {
      * class Watcher{
      *  constructor(vm, expOrFn, cb, option){}
      * }
+     * 这里 就是对这个函数求职
+     *  function updateComponent () {
+          vm._update(vm._render(), hydrating)
+        }
+        这里需要看一下_update和_render
+        noop是不执行任何代码的函数
+        也就是说这一步的作用仅仅是监听vm._update(vm._render(), hydrating)
+        这句是数据改变触发视图改变的核心代码
      */
     vm._watcher = new Watcher(vm, function updateComponent () {
+      //先执行_render() 在'./render.js'中定义
+      //vm._render()生成的是一个vnode
+
       vm._update(vm._render(), hydrating)
     }, noop)
     hydrating = false
