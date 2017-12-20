@@ -70,10 +70,17 @@ export default class Dep {
 // the current target watcher being evaluated.
 // this is globally unique because there could be only one
 // watcher being evaluated at any time.
+/**
+ * 当前的target watcher被就值
+ * 这是一个全局的唯一的，因为这在某一时间段只能有
+ * 一个watcher在被计算
+ */
+
 Dep.target = null
 const targetStack = []
 
 export function pushTarget (_target: Watcher) {
+  //？？？
   if (Dep.target) targetStack.push(Dep.target)
   /**
    * 把Dep.target设置成当前的watcher

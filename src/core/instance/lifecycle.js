@@ -96,7 +96,9 @@ export function lifecycleMixin (Vue: Class<Component>) {
       callHook(vm, 'beforeUpdate')
     }
     const prevEl = vm.$el
+
     const prevVnode = vm._vnode
+
     const prevActiveInstance = activeInstance
     activeInstance = vm
     vm._vnode = vnode
@@ -104,6 +106,7 @@ export function lifecycleMixin (Vue: Class<Component>) {
     // based on the rendering backend used.
     if (!prevVnode) {
       // initial render
+      //如果没有prevVnode就直接生成Dom
       vm.$el = vm.__patch__(
         vm.$el, vnode, hydrating, false /* removeOnly */,
         vm.$options._parentElm,
@@ -111,6 +114,7 @@ export function lifecycleMixin (Vue: Class<Component>) {
       )
     } else {
       // updates
+      //
       vm.$el = vm.__patch__(prevVnode, vnode)
     }
     activeInstance = prevActiveInstance

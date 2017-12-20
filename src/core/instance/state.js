@@ -23,6 +23,8 @@ import {
 } from '../util/index'
 
 export function initState (vm: Component) {
+  //每次新建一个Vue实例的时候就有一个_watchers
+  // 每次new Watcher的时候就push进去一个
   vm._watchers = []
   const opts = vm.$options
   if (opts.props) initProps(vm, opts.props)
@@ -126,6 +128,9 @@ const computedSharedDefinition = {
 }
 
 function initComputed (vm: Component, computed: Object) {
+  /**
+   * 遍历computed option
+   */
   for (const key in computed) {
     /* istanbul ignore if */
     if (process.env.NODE_ENV !== 'production' && key in vm) {
@@ -135,11 +140,21 @@ function initComputed (vm: Component, computed: Object) {
         vm
       )
     }
+    /**
+     * userDef
+     */
     const userDef = computed[key]
+    /**
+     * computed的写法有两种
+     * 一种是function
+     * 一种是有set和get的对象
+     */
     if (typeof userDef === 'function') {
       computedSharedDefinition.get = makeComputedGetter(userDef, vm)
+      //set的时候什么都不执行
       computedSharedDefinition.set = noop
     } else {
+      //get, set
       computedSharedDefinition.get = userDef.get
         ? userDef.cache !== false
           ? makeComputedGetter(userDef.get, vm)
@@ -149,11 +164,13 @@ function initComputed (vm: Component, computed: Object) {
         ? bind(userDef.set, vm)
         : noop
     }
+    //computed的key并没有在observer里面
     Object.defineProperty(vm, key, computedSharedDefinition)
   }
 }
 
 function makeComputedGetter (getter: Function, owner: Component): Function {
+  //每一个computed都new Watcher
   const watcher = new Watcher(owner, getter, noop, {
     lazy: true
   })

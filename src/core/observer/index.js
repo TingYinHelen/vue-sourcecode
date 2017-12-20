@@ -38,6 +38,7 @@ export const observerState = {
  *
  * Observer的作用就是就是遍历对象的所有属性进行双向绑定
  */
+// 只有在调用observe的时候new Observer
 export class Observer {
   value: any;
   dep: Dep;
@@ -47,6 +48,7 @@ export class Observer {
     this.value = value
     this.dep = new Dep()
     this.vmCount = 0
+
     def(value, '__ob__', this)
     if (Array.isArray(value)) {
       const augment = hasProto
@@ -223,7 +225,7 @@ export function defineReactive (
        *
        */
       const value = getter ? getter.call(obj) : val
-
+      //在没有new watcher的时候都没有Dep.target
       if (Dep.target) {
         /**
          * 收集依赖
@@ -239,7 +241,6 @@ export function defineReactive (
           dependArray(value)
         }
       }
-
       return value
     },
     set: function reactiveSetter (newVal) {

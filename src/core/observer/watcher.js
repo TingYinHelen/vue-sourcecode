@@ -32,6 +32,8 @@ let uid = 0
  * 当expression的值改变的时候fire一个回调函数
  * 这被用在$watch() api 和 directives
  */
+//有三个地方new Watcher => mountComponent,initComputed,Vue.prototype.$watch
+
 export default class Watcher {
   vm: Component;
   expression: string;
@@ -117,17 +119,21 @@ export default class Watcher {
   get () {
     /**
      * 将这个watcher实例设置为Dep.target
+     * 只有在new Watcher的时候才会执行pushTarget(this)
+     * 也就是只有在pushTarget的时候才会Dep.target = this
      */
     pushTarget(this)
     /**
      * 获取值，触发defineProperty中的get方法
+     * this.getter = expOrFn
+     * expOrFn.call(this.vm, this.vm)
+     * 其实就是执行一次expOrFn
+     * 也就会使用到this.a,this.b
+     * 就会触发get()
      */
     const value = this.getter.call(this.vm, this.vm)
     // "touch" every property so they are all tracked as
     // dependencies for deep watching
-    /**
-     * deep watching是什么
-     */
     if (this.deep) {
       traverse(value)
     }
@@ -156,6 +162,7 @@ export default class Watcher {
 
   /**
    * Clean up for dependency collection.
+   * 清理依赖
    */
   cleanupDeps () {
     let i = this.deps.length
