@@ -46,6 +46,8 @@ export class Observer {
 
   constructor (value: any) {
     this.value = value
+    //这里的Dep对象挂在在__ obj__属性上
+    //不是用在属性get和set时候的（后面再看）
     this.dep = new Dep()
     this.vmCount = 0
 
@@ -177,8 +179,9 @@ export function defineReactive (
   //观察者模式
   //dep.depend()是绑定依赖，dep.notify()是触发通知
   //这也说明只有被get()过的属性才会绑定依赖，未被get()就忽略不管
-
+  //没有属性都有一个dep实例，这个实例将在get()的闭包中
   const dep = new Dep()
+
   //返回属性描述符
 
   const property = Object.getOwnPropertyDescriptor(obj, key)
@@ -226,14 +229,15 @@ export function defineReactive (
        */
       const value = getter ? getter.call(obj) : val
       //在没有new watcher的时候都没有Dep.target
+      //有target的时候才手机依赖，没有就直接取值
       if (Dep.target) {
         /**
          * 收集依赖
-         * 然后递归手机依赖
          * 如果是数组，将使用dependArray
          * 对象的每一个属性都要dep.depend()
          */
         dep.depend()
+        //然后递归手机依赖
         if (childOb) {
           childOb.dep.depend()
         }

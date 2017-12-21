@@ -13,7 +13,7 @@ export default class Dep {
   //target是一个watcher对象
   static target: ?Watcher;
   id: number;
-  subs: Array<Watcher>;
+  subs: Array<Watcher>; //subs存的是这个Dep的所有订阅者Watcher
 
   constructor () {
     this.id = uid++
@@ -59,9 +59,12 @@ export default class Dep {
     // stablize the subscriber list first
     const subs = this.subs.slice()
     /**
-     * 每一个都依赖都执行update
+     * 遍历这个依赖的所有订阅者watcher
      */
     for (let i = 0, l = subs.length; i < l; i++) {
+      //update()的最终目的就是要执行Watcher的get()
+      //执行这个Watcher的get()的时候就会触发这个Watcher的依赖们的get()
+      //然后重新收集依赖
       subs[i].update()
     }
   }

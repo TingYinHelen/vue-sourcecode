@@ -131,15 +131,16 @@ export default class Watcher {
      * 也就会使用到this.a,this.b
      * 就会触发get()
      */
-    const value = this.getter.call(this.vm, this.vm)
+    const value = this.getter.call(this.vm, this.vm) //就在这一步收集依赖
     // "touch" every property so they are all tracked as
     // dependencies for deep watching
     if (this.deep) {
       traverse(value)
     }
     popTarget()
+
     /**
-     *
+     * 清除依赖
      */
     this.cleanupDeps()
     return value
@@ -147,13 +148,14 @@ export default class Watcher {
 
   /**
    * Add a dependency to this directive.
-   *
    */
   addDep (dep: Dep) {
     const id = dep.id
+    //问题newDepIds
     if (!this.newDepIds.has(id)) {
       this.newDepIds.add(id)
       this.newDeps.push(dep)
+      //去重，如果已经有了这个id的Dep，就不加入到sub中了
       if (!this.depIds.has(id)) {
         dep.addSub(this)
       }
@@ -168,17 +170,29 @@ export default class Watcher {
     let i = this.deps.length
     while (i--) {
       const dep = this.deps[i]
+      //如果这个watcher不依赖与某个数据就要把这个依赖给删除
       if (!this.newDepIds.has(dep.id)) {
         dep.removeSub(this)
       }
     }
+
+    // this.deps = []
+    // this.newDeps = []
+    // this.depIds = new Set()
+    // this.newDepIds = new Set()
+
     let tmp = this.depIds
+    //更新depIds
     this.depIds = this.newDepIds
     this.newDepIds = tmp
+    //清空newDepIds
     this.newDepIds.clear()
     tmp = this.deps
+    //这里赋值了this.deps
+    //更新deps
     this.deps = this.newDeps
     this.newDeps = tmp
+    //清空newDeps
     this.newDeps.length = 0
   }
 
