@@ -15,6 +15,7 @@ const idToTemplate = cached(id => {
 const mount = Vue.prototype.$mount
 
 //然后重新覆盖了Vue.prototype.$mount
+//注意搞清楚是哪个对象
 Vue.prototype.$mount = function (
   el?: string | Element,
   hydrating?: boolean
@@ -33,7 +34,7 @@ Vue.prototype.$mount = function (
   // resolve template/el and convert to render function
   if (!options.render) {
     let template = options.template
-
+    //如果有template直接
     if (template) {
       if (typeof template === 'string') {
         if (template.charAt(0) === '#') {
@@ -55,10 +56,10 @@ Vue.prototype.$mount = function (
         return this
       }
     } else if (el) {
+      //直接把el中的整个代码以字符串赋给template
       template = getOuterHTML(el)
     }
 
-    //这里才是重点
     if (template) {
       const { render, staticRenderFns } = compileToFunctions(template, {
         warn: msg => warn(msg, this),
@@ -80,6 +81,9 @@ Vue.prototype.$mount = function (
  * of SVG elements in IE as well.
  */
 function getOuterHTML (el: Element): string {
+  //outerHTML会返回包括el在内的元素
+  //innerHTML会返回el内的元素
+  //所以一个是inner一个是outer
   if (el.outerHTML) {
     return el.outerHTML
   } else {
