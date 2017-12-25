@@ -35,6 +35,7 @@ export function initLifecycle (vm: Component) {
 }
 
 export function lifecycleMixin (Vue: Class<Component>) {
+
   Vue.prototype._mount = function (
     el?: Element | void,
     hydrating?: boolean
@@ -77,7 +78,6 @@ export function lifecycleMixin (Vue: Class<Component>) {
     vm._watcher = new Watcher(vm, function updateComponent () {
       //先执行_render() 在'./render.js'中定义
       //vm._render()生成的是一个vnode
-
       vm._update(vm._render(), hydrating)
     }, noop)
     hydrating = false

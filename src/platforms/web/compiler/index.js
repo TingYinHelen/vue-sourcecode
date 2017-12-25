@@ -13,18 +13,19 @@ import { isUnaryTag } from './util'
 
 const cache: { [key: string]: CompiledFunctionResult } = Object.create(null)
 
-//compile中的option是扩展的这里的option
+// compile中的option是扩展的这里的option
 // 这里就设置了option的默认值
+// 保存了一些与平台相关的配置，在编译模板的时候会用到
 export const baseOptions: CompilerOptions = {
-  expectHTML: true,
-  modules,
-  staticKeys: genStaticKeys(modules),
-  directives,
-  isReservedTag,
-  isUnaryTag,
-  mustUseProp,
-  getTagNamespace,
-  isPreTag
+  expectHTML: true, //不知道
+  modules, //包括klass和style，对模板中类和样式的解析
+  staticKeys: genStaticKeys(modules), //静态关键词，包括staticClass,staticStyle
+  directives, //这里包括model（v-model）、html（v-html）、text(v-text)三个指令
+  isReservedTag, //是否是保留标签，html标签和SVG标签
+  isUnaryTag, //是否是单标签，比如img、input、iframe等
+  mustUseProp, //需要使用props绑定的属性，比如value、selected等
+  getTagNamespace, //获取命名空间，svg和math
+  isPreTag //是否是pre标签
 }
 /**
  * 这里可以看出，weex和web使用的compile都是同一个
@@ -44,7 +45,7 @@ export function compile (
     : baseOptions
   return baseCompile(template, options)
 }
-
+//将template进行编译
 export function compileToFunctions (
   template: string,
   options?: CompilerOptions,

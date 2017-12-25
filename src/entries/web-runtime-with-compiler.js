@@ -4,6 +4,7 @@ import Vue from './web-runtime'
 import { warn, cached } from 'core/util/index'
 import { query } from 'web/util/index'
 import { shouldDecodeNewlines } from 'web/util/compat'
+//编译部分的代码在src/platforms/web/compiler下面
 import { compileToFunctions } from 'web/compiler/index'
 
 const idToTemplate = cached(id => {
@@ -59,7 +60,7 @@ Vue.prototype.$mount = function (
       //直接把el中的整个代码以字符串赋给template
       template = getOuterHTML(el)
     }
-
+    //这里开始编译 template
     if (template) {
       const { render, staticRenderFns } = compileToFunctions(template, {
         warn: msg => warn(msg, this),
@@ -92,7 +93,7 @@ function getOuterHTML (el: Element): string {
     return container.innerHTML
   }
 }
-
+//全局的compile函数
 Vue.compile = compileToFunctions
 
 export default Vue
