@@ -78,6 +78,7 @@ export function lifecycleMixin (Vue: Class<Component>) {
     vm._watcher = new Watcher(vm, function updateComponent () {
       //先执行_render() 在'./render.js'中定义
       //vm._render()生成的是一个vnode
+      //vm._update()其实就是虚拟DOM中的最后一步: patch
       vm._update(vm._render(), hydrating)
     }, noop)
     hydrating = false
@@ -89,7 +90,7 @@ export function lifecycleMixin (Vue: Class<Component>) {
     }
     return vm
   }
-
+  //虚拟DOM patch的最后一步
   Vue.prototype._update = function (vnode: VNode, hydrating?: boolean) {
     const vm: Component = this
     if (vm._isMounted) {
@@ -106,7 +107,7 @@ export function lifecycleMixin (Vue: Class<Component>) {
     // based on the rendering backend used.
     if (!prevVnode) {
       // initial render
-      //如果没有prevVnode就直接生成Dom
+      //如果没有prevVnode说明是首次渲染,就直接生成Dom
       vm.$el = vm.__patch__(
         vm.$el, vnode, hydrating, false /* removeOnly */,
         vm.$options._parentElm,
@@ -114,7 +115,8 @@ export function lifecycleMixin (Vue: Class<Component>) {
       )
     } else {
       // updates
-      //
+      // 如果有了prevVnode说明不是首次渲染
+      // 那么就采取patch算法，进行必要的DOM操作
       vm.$el = vm.__patch__(prevVnode, vnode)
     }
     activeInstance = prevActiveInstance

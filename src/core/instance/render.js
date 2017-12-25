@@ -55,7 +55,7 @@ export function renderMixin (Vue: Class<Component>) {
     const vm: Component = this
     /**
      * 结构$options中的render
-     * render是compileToFunctions执行后返回的
+     * $options.render是compileToFunctions将template或者el编译出来的
      */
     const {
       render,
@@ -84,6 +84,13 @@ export function renderMixin (Vue: Class<Component>) {
       /**
        * 运行render函数,
        * 可以看出生成的是一个vnode
+       * vm._renderProxy = vm
+       *
+       * render = function anonymous(){
+       *  with(this){return _c('div',{attrs:{"id":"app"}},[_v("\n    "+_s(sum)+"\n  ")])}
+       * }
+       * vm._renderProxy将render的作用域绑定在当前vue实例
+       * _c,_v,_s以及sum都是Vue实例下的方法和属性
        */
       vnode = render.call(vm._renderProxy, vm.$createElement)
     } catch (e) {
