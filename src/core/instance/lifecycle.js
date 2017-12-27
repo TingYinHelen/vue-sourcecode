@@ -41,6 +41,7 @@ export function lifecycleMixin (Vue: Class<Component>) {
     hydrating?: boolean
   ): Component {
     const vm: Component = this
+    //
     vm.$el = el
     if (!vm.$options.render) {
       vm.$options.render = createEmptyVNode
@@ -108,6 +109,7 @@ export function lifecycleMixin (Vue: Class<Component>) {
     if (!prevVnode) {
       // initial render
       //如果没有prevVnode说明是首次渲染,就直接生成Dom
+      //这里生成dom
       vm.$el = vm.__patch__(
         vm.$el, vnode, hydrating, false /* removeOnly */,
         vm.$options._parentElm,
