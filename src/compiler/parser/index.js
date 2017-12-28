@@ -113,6 +113,7 @@ export function parse (
         processRawAttrs(element)
       } else {
         processFor(element)
+        //解析v-if
         processIf(element)
         processOnce(element)
         processKey(element)

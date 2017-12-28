@@ -6,6 +6,9 @@ import { warn, isPlainObject } from '../util/index'
 export function initAssetRegisters (Vue: GlobalAPI) {
   /**
    * Create asset registration methods.
+   * config._assetTypes = ['component','directive', 'filter']
+   * 分别挂载'component','directive', 'filter'
+   * 平时的用法: Vue.component(name, {})
    */
   config._assetTypes.forEach(type => {
     Vue[type] = function (
@@ -24,13 +27,18 @@ export function initAssetRegisters (Vue: GlobalAPI) {
             )
           }
         }
+        //挂载component
         if (type === 'component' && isPlainObject(definition)) {
+          //Vue.component(name, {})给组件起个名字
           definition.name = definition.name || id
+          //Vue.options._base = Vue
+          //可以看出vue.component其实就是调用了vue.extend
           definition = this.options._base.extend(definition)
         }
         if (type === 'directive' && typeof definition === 'function') {
           definition = { bind: definition, update: definition }
         }
+
         this.options[type + 's'][id] = definition
         return definition
       }
