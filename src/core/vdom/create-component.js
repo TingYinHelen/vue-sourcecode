@@ -156,7 +156,7 @@ export function createComponentInstanceForVnode (
   }
   return new vnodeComponentOptions.Ctor(options)
 }
-
+////生成component
 function init (
   vnode: VNodeWithData,
   hydrating: boolean,

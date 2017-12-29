@@ -166,6 +166,7 @@ function genElement (el: ASTElement): string {
     //我这里测试静态节点data是undefined
     //先看看genChildren()
     if (el.component) {
+      //component
       code = genComponent(el.component, el)
     } else {
       // data这里返回的是元素的属性，staticStyle:{"border":"1px solid red"}，attrs:{"id":"app"}

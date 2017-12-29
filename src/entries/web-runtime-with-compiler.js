@@ -62,6 +62,13 @@ Vue.prototype.$mount = function (
     }
     //这里开始编译 template
     if (template) {
+
+      //compileToFunctions将template转成render
+      //准备render函数最核心的一步
+      //compileToFunctions有两步:
+      // 1.生成ast
+      // 2.利用generate(ast, options)生成render函数
+
       const { render, staticRenderFns } = compileToFunctions(template, {
         warn: msg => warn(msg, this),
         shouldDecodeNewlines,

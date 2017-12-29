@@ -43,6 +43,18 @@ export function compile (
   options = options
     ? extend(extend({}, baseOptions), options)
     : baseOptions
+
+    // function compile(template, options){
+    //   const ast = parse(template.trim(), options)
+    //   optimize(ast, options)
+    //   const code = generate(ast, options)
+    //   return {
+    //     ast,
+    //     render: code.render,
+    //     staticRenderFns: code.staticRenderFns
+    //   }
+    // }
+
   return baseCompile(template, options)
 }
 //将template进行编译
@@ -76,8 +88,19 @@ export function compileToFunctions (
     return cache[key]
   }
   const res = {}
+  //compiled执行之后返回的是一个对象
+  // {
+  //   ast: ....,
+  //   render: with(this){return _c('div',{attrs:{"id":"app"}},[_c('my-component')],1)},
+  //   staticRenderFns: ....,
+  //   errors: ....,
+  //   tips: []
+  // }
+
   const compiled = compile(template, options)
+
   res.render = makeFunction(compiled.render)
+
   const l = compiled.staticRenderFns.length
   res.staticRenderFns = new Array(l)
   for (let i = 0; i < l; i++) {
@@ -93,6 +116,7 @@ export function compileToFunctions (
       )
     }
   }
+
   return (cache[key] = res)
 }
 

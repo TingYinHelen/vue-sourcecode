@@ -50,7 +50,10 @@ export function renderMixin (Vue: Class<Component>) {
   Vue.prototype.$nextTick = function (fn: Function) {
     return nextTick(fn, this)
   }
-
+  //new Watcher(vm, function updateComponent () {
+  //   vm._update(vm._render(), hydrating)
+  // }, noop)
+  //此时option.render中已经存放了生成好的render函数
   Vue.prototype._render = function (): VNode {
     const vm: Component = this
     /**
@@ -62,6 +65,8 @@ export function renderMixin (Vue: Class<Component>) {
       staticRenderFns,
       _parentVnode
     } = vm.$options
+
+
 
     if (vm._isMounted) {
       // clone slot nodes on re-renders
@@ -92,7 +97,10 @@ export function renderMixin (Vue: Class<Component>) {
        * vm._renderProxy将render的作用域绑定在当前vue实例
        * _c,_v,_s以及sum都是Vue实例下的方法和属性
        */
+      // vm.$createElement????
+
       vnode = render.call(vm._renderProxy, vm.$createElement)
+
     } catch (e) {
       /* istanbul ignore else */
       if (config.errorHandler) {
