@@ -60,6 +60,5 @@ export function initAssetRegisters (Vue: GlobalAPI) {
 //     return definition
 //   }
 // })
-// Vue.component(id, definition) <=> Vue.extend(definition)
-// 这样的话可以推断，下面这句才创建了一个组件实例
-// {/* <my-component></my-component> */}
+// Vue.component(id, definition) => Vue.extend(definition)
+// Vue.component(id, definition) 的作用就是完成组件和标签名字的映射
