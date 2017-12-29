@@ -48,3 +48,16 @@ export function initAssetRegisters (Vue: GlobalAPI) {
     }
   })
 }
+
+
+简化：
+config._assetTypes.forEach(type => {
+  Vue[type] = function(id, definition){
+    definition.name = definition.name || id
+    if(type === 'component'){
+      definition = Vue.extend(definition) //definition就是配置项
+    }
+    return definition
+  }
+})
+Vue.component(id, definition) <=> Vue.extend(definition)

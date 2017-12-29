@@ -50,5 +50,7 @@ export function initGlobalAPI (Vue: GlobalAPI) {
   initExtend(Vue)
 
   //这里挂载['component','directive', 'filter']
+
+
   initAssetRegisters(Vue)
 }
