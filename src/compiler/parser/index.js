@@ -59,6 +59,7 @@ export function parse (
   let inVPre = false
   let inPre = false
   let warned = false
+
   parseHTML(template, {
     expectHTML: options.expectHTML,
     isUnaryTag: options.isUnaryTag,

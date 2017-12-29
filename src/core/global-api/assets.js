@@ -33,6 +33,9 @@ export function initAssetRegisters (Vue: GlobalAPI) {
           definition.name = definition.name || id
           //Vue.options._base = Vue
           //可以看出vue.component其实就是调用了vue.extend
+          //definition就是Vue.component(name, options)的第二个参数
+          //也可以看出Vue.extend没有id这个参数Vue.component将第一个id
+          //参数放到了definition.name下
           definition = this.options._base.extend(definition)
         }
         if (type === 'directive' && typeof definition === 'function') {
