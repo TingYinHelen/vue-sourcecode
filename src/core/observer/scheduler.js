@@ -51,6 +51,7 @@ function flushSchedulerQueue () {
     watcher = queue[index]
     id = watcher.id
     has[id] = null
+    // watcher.run()就是在更新dom
     watcher.run()
     // in dev build, check and stop circular updates.
     if (process.env.NODE_ENV !== 'production' && has[id] != null) {
@@ -93,6 +94,12 @@ function flushSchedulerQueue () {
  * Jobs with duplicate IDs will be skipped unless it's
  * pushed when the queue is being flushed.
  */
+
+// queueWatcher函数本身是将watcher实例本身加到一个队列中:queue.push(watcher)
+// 然后调用: nextTick()
+
+// 每一个被notify的watcher都执行一次
+
 export function queueWatcher (watcher: Watcher) {
   const id = watcher.id
   if (has[id] == null) {
@@ -109,6 +116,7 @@ export function queueWatcher (watcher: Watcher) {
       queue.splice(Math.max(i, index) + 1, 0, watcher)
     }
     // queue the flush
+    // 直到所有的watcher都push到queue后
     if (!waiting) {
       waiting = true
       nextTick(flushSchedulerQueue)

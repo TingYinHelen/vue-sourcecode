@@ -23,7 +23,11 @@ function Vue (options) {
 initMixin(Vue)
 stateMixin(Vue)
 eventsMixin(Vue)
+
+// 在lifecycleMix中会执行new watcher，
+// 这里渲染的是在expOrFn就是updateComponent
 lifecycleMixin(Vue)
+
 renderMixin(Vue)
 
 export default Vue

@@ -131,7 +131,8 @@ export default class Watcher {
      * 也就会使用到this.a,this.b
      * 就会触发get()
      */
-    const value = this.getter.call(this.vm, this.vm) //就在这一步收集依赖
+    const value = this.getter.call(this.vm, this.vm)
+    //上面这一步是将这个watcher放进属性的subs中
     // "touch" every property so they are all tracked as
     // dependencies for deep watching
     if (this.deep) {

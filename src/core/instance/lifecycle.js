@@ -76,6 +76,9 @@ export function lifecycleMixin (Vue: Class<Component>) {
         也就是说这一步的作用仅仅是监听vm._update(vm._render(), hydrating)
         这句是数据改变触发视图改变的核心代码
      */
+
+
+    //  这样看来，每一个实例，就会有一次new Watcher,就会有一个watcher实例
     vm._watcher = new Watcher(vm, function updateComponent () {
       //先执行_render() 在'./render.js'中定义
       //vm._render()生成的是一个vnode

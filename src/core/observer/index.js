@@ -53,6 +53,11 @@ export class Observer {
 
     def(value, '__ob__', this)
     if (Array.isArray(value)) {
+
+      // 如果有__proto_直接给__proto__赋值
+      // 否则直接将方法给该对象
+
+
       const augment = hasProto
         ? protoAugment
         : copyAugment
